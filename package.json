@@ -1,0 +1,20 @@
+{
+  "name": "nasa-project-root",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "server": "cd server && npm run watch",
+    "client": "cd client && npm start",
+    "watch": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "echo Please run 'npm start' in client or server directory.",
+    "install-all": "npm install --workspaces"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
