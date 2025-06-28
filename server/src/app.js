@@ -11,8 +11,8 @@ app.use(cors({
 app.use(morgan('combined')); // Logging middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
-app.use(planetRouter);  
-app.use(launchesRouter);  
+app.use('/planets', planetRouter); // Use the planetRouter for /planets endpoint
+app.use('/launches',launchesRouter);  
 // Move the catch-all route to the end, after all API routes
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
