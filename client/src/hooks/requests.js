@@ -10,6 +10,11 @@ const API_URL = 'http://localhost:8000';
 
 async function httpGetLaunches() {
   // TODO: Once API is ready.
+  const response = await fetch('http://localhost:8000/launches');
+  const launches = await response.json();
+  return launches.sort((a, b) => {
+    return a.flightNumber - b.flightNumber;
+  });
   // Load launches, sort by flight number, and return as JSON.
 }
 
