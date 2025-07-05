@@ -1,11 +1,11 @@
-const {getAllLaunches, addNewLaunch, existsLaunchWithId} = require('../../model/launches.model');
+const {getAllLaunches, scheduleNewLaunch, existsLaunchWithId} = require('../../model/launches.model');
 
 async function httGetAllLaunches(req, res) {
     const launches = await getAllLaunches();
     res.status(200).json(launches);
 }
 
-function httAddNewLaunches(req, res) {
+async function httAddNewLaunches(req, res) {
     const launch = req.body;
     // Fix typo from frontend: map 'misssion' to 'mission' if presen
     console.log('Received launch data:', launch);
@@ -21,7 +21,7 @@ function httAddNewLaunches(req, res) {
             error: 'Invalid launch date',
         }); 
        console.error('Adding new launch:', req.body); 
-    addNewLaunch(req.body);
+    await scheduleNewLaunch(req.body);
     return res.status(201).json(launch);
 }
 
