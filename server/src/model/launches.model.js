@@ -1,4 +1,5 @@
-const launches = new Map();
+const launches = require('./launches.mongoose');
+//const launches = new Map();
 
 let latestFlightNumber = 100;
 
@@ -13,22 +14,42 @@ const launch = {
     success: true,
 }
 
-launches.set(launch.flightNumber, launch);
+//launches.set(launch.flightNumber, launch);
 
-function getAllLaunches() {
-    return Array.from(launches.values());
+async function getAllLaunches() {
+    return await launches.find()
+}
+
+//save launch to the database
+
+async function saveLaunch(launch) {
+    console.log('Saving launch:', launch);
+    await launches.updateOne(
+        {
+            flightNumber: launch.flightNumber
+        },
+        launch,
+        {
+            upsert: true
+        }
+    );  
 }
 
 function addNewLaunch(launch) {
+    console.log('Adding new launch:', launch);
     latestFlightNumber++;
-    launches.set(launch.flightNumber,
-        Object.assign(launch, {
-            upcoming: true,
-            success: true,
-            customers: ['ZTM', 'NASA'],
-            flightNumber: latestFlightNumber,
-        })  
-    );
+    launch.flightNumber = latestFlightNumber;
+    launch.upcoming = true;
+    launch.success = true;
+    launch.customers = ['ZTM', 'NASA'];
+    // Map 'destination' to 'target' for mongoose schema compatibility
+    if (launch.destination) {
+        launch.target = launch.destination;
+        delete launch.destination;
+    }
+    saveLaunch(launch).catch((err) => {
+        console.error('Error saving launch:', err);
+    });
 }   
 
 function existsLaunchWithId(id) {

@@ -23,8 +23,12 @@ function loadPlanetsData() {
                 if (isHabitablePlanet(data)) {  
                     // habitablePlanets.push(data);
                     // insert + update = upsert
-                  await planets.create({
+                  await planets.updateOne({
                     keplerName: data['kepler_name']
+                  }, {
+                    keplerName: data['kepler_name']
+                  },{
+                    upsert: true
                   });
                 }
             })
@@ -38,11 +42,15 @@ function loadPlanetsData() {
     });
 }
 
-function getAllPlanets() {
-    return habitablePlanets;
+async function getAllPlanets() {
+    return await planets.find({}, {
+        '__v': 0, // Exclude __v field
+        '_id': 0, // Exclude _id field
+    });
 }
 
 module.exports = {
     loadPlanetsData,
-    habitablePlanets
+    habitablePlanets,
+    getAllPlanets
 };

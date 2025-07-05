@@ -1,11 +1,14 @@
 const {getAllLaunches, addNewLaunch, existsLaunchWithId} = require('../../model/launches.model');
 
-function httGetAllLaunches(req, res) {
-    res.status(200).json(getAllLaunches());
+async function httGetAllLaunches(req, res) {
+    const launches = await getAllLaunches();
+    res.status(200).json(launches);
 }
 
 function httAddNewLaunches(req, res) {
     const launch = req.body;
+    // Fix typo from frontend: map 'misssion' to 'mission' if presen
+    console.log('Received launch data:', launch);
     if (!launch.mission || !launch.rocket 
         || !launch.launchDate || !launch.destination) {
         return res.status(400).json({
@@ -17,6 +20,7 @@ function httAddNewLaunches(req, res) {
         res.status(400).json({
             error: 'Invalid launch date',
         }); 
+       console.error('Adding new launch:', req.body); 
     addNewLaunch(req.body);
     return res.status(201).json(launch);
 }
